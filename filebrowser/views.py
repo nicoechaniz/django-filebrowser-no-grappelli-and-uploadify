@@ -7,7 +7,7 @@ from time import gmtime, strftime
 # django imports
 from django.shortcuts import render_to_response, HttpResponse
 from django.template import RequestContext as Context
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
 from django.utils.translation import ugettext as _
@@ -52,6 +52,14 @@ def browse(request):
     query = request.GET.copy()
     path = get_path(query.get('dir', ''))
     directory = get_path('')
+
+    if path is not None:
+        abs_path = os.path.abspath(os.path.join(
+                MEDIA_ROOT, DIRECTORY, path))
+        if not abs_path.startswith(os.path.abspath(os.path.join(
+                MEDIA_ROOT, DIRECTORY))):
+            # cause any attempt to leave media root directory to fail
+            return HttpResponseForbidden("Attempt to leave media root")
 
     if path is None:
         msg = _('The requested Folder does not exist.')
