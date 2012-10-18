@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-filebrowser-nograpup',
-    version='3.0.2',
+    version='3.0.3',
     description='Media-Management with the Django Admin-Interface.',
     author='Patrick Kranzlmueller',
     author_email='patrick@vonautomatisch.at',
