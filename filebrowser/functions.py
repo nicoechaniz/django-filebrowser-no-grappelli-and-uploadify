@@ -11,6 +11,7 @@ from django.utils.safestring import mark_safe
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.utils.encoding import smart_str
+from django.utils.text import get_valid_filename
 
 # filebrowser imports
 from filebrowser.settings import *
@@ -367,7 +368,7 @@ def convert_filename(value):
     """
 
     if CONVERT_FILENAME:
-        return value.replace(" ", "_").lower()
+        return get_valid_filename(value)
     else:
         return value
 
