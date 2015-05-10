@@ -1,7 +1,7 @@
 # coding: utf-8
 
 # imports
-import os, re, decimal
+import os, re, decimal, unicodedata
 from time import gmtime, strftime, localtime, mktime, time
 from urlparse import urlparse
 
@@ -11,7 +11,6 @@ from django.utils.safestring import mark_safe
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.utils.encoding import smart_str
-from django.utils.text import get_valid_filename
 
 # filebrowser imports
 from filebrowser.settings import *
@@ -368,7 +367,12 @@ def convert_filename(value):
     """
 
     if CONVERT_FILENAME:
-        return get_valid_filename(value)
+        # based on django's slugify
+        value = unicode(value)
+        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+        value = unicode(re.sub('[^.\w\s-]', '', value).strip().lower())
+        return re.sub('[-\s]+', '-', value)
+
     else:
         return value
 
